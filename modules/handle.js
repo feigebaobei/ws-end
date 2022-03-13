@@ -73,7 +73,7 @@ let userData = {
             pool.getConnection((err, connection) => {
                 if (!err) {
                     connection.query(sql.queryStudentByCertNumber, certNumber, (err, result) => {
-                        connect.release()
+                        connection.release()
                         if (!err) {
                             s(result)
                         } else {

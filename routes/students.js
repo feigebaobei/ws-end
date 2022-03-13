@@ -37,10 +37,6 @@ let upload = multer({
     fileFilter: imageFileFilter
 })
 
-
-
-
-
 /* GET users listing. */
 router.route('/')
 .options(cors.corsWithOptions, (req, res) => {
@@ -115,7 +111,7 @@ router.route('/levelCert')
       //     code: 0
       //   })
       // })
-      queryStudentByCertNumber(idCardOrCertNumber).then(result => {
+      userData.queryStudentByCertNumber(idCardOrCertNumber).then(result => {
         res.status(200).json({
           data: result[0].levelCertUrl,
           message: '请求成功',
