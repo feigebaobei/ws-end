@@ -1,6 +1,8 @@
 var cors = require('cors')
 
 var whiteList = [
+  'http://wushusandavercel.com',
+  'https://wushusandavercel.com',
     'http://localhost:3000',
     'https://localhost:3000',
     'http://localhost:3001',
