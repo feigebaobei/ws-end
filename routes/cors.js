@@ -7,6 +7,8 @@ var whiteList = [
     'https://localhost:3000',
     'http://localhost:3001',
     'https://localhost:3001',
+    'http://localhost:3003',
+    'https://localhost:3003',
     'https://192.168.1.6:8080',
     'http://192.168.1.6:8080'
 ]
