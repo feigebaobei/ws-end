@@ -106,6 +106,7 @@ router.route('/levelCert')
       })
     } else { // 按证书号查
       userData.queryStudentByCertNumber(idCardOrCertNumber).then(result => {
+        console.log('result', result)
         res.status(200).json({
           data: result[0].photo_path,
           message: '请求成功',
@@ -179,7 +180,8 @@ router.route('/levelCert')
       // 检查参数
       if ( // !cert_number || !id_card || !photo_path
         !name ||
-        !gender ||
+        // !gender ||
+        [0, 1].includes(gender),
         !project_grade ||
         !project ||
         !id_card ||
@@ -196,7 +198,7 @@ router.route('/levelCert')
         // 是否已经存在该学生
         userData.queryStudentByIdCard(id_card).then(user => {
           // user: []
-          // log('user', user, user[0].photo_path)
+          log('user', user, user[0].photo_path)
           if (user.length) { // 更新该学生的数据
             user = user[0]
             // 删除原来的级位证书
@@ -208,14 +210,36 @@ router.route('/levelCert')
               // } else {
               //   log('err', err)
               }
+
+
               // 更新该学生的数据
-              userData.updateStudentLevelCertUrl(photo_path, user.id).then(result => {
+              userData.updateStudentLevelCertUrl(
+                // photo_path, user.id
+                name !== undefined ? name : user.name,
+                gender !== undefined ? gender : user.gender,
+                project_grade !== undefined ? project_grade : user.project_grade,
+                project !== undefined ? project : user.project,
+                id_card !== undefined ? id_card : user.id_card,
+                approval_enterprises !== undefined ? approval_enterprises : user.approval_enterprises,
+                approval_date !== undefined ? approval_date : user.approval_date,
+                cert_number !== undefined ? cert_number : user.cert_number,
+                photo_path !== undefined ? photo_path : user.photo_path,
+                user.id
+                ).then(result => {
                 res.status(200).json({
                   data: result,
                   message: '更新成功',
                   code: 0
                 })
               })
+
+                // res.status(200).json({
+                //   data: {},
+                //   message: '更新成功',
+                //   code: 0
+                // })
+
+
             })
           } else { // 保存该学生的数据
             return userData.insertStudents(

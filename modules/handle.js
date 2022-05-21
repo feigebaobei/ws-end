@@ -200,11 +200,19 @@ let userData = {
             })
         })
     },
-    updateStudentLevelCertUrl: (photo_path, id) => {
+    updateStudentLevelCertUrl: (
+        // photo_path, id
+        name, gender, project_grade, project, id_card, approval_enterprises, approval_date, cert_number, photo_path,
+        id
+        ) => {
         return new Promise((s, j) => {
             pool.getConnection((err, connection) => {
                 if (!err) {
-                    connection.query(sql.updateStudentLevelCertUrl, [photo_path, id], (err, result) => {
+                    connection.query(sql.updateStudentLevelCertUrl, [
+                        // photo_path, id
+                        name, gender, project_grade, project, id_card, approval_enterprises, approval_date, cert_number, photo_path,
+                        id
+                    ], (err, result) => {
                         connection.release()
                         if (!err) {
                             s(result)
