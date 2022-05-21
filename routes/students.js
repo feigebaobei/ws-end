@@ -164,21 +164,12 @@ router.route('/levelCert')
       //   },
       // photo: [{...}]
       // ]}
-
-      // cert_number id_card levelCert
-      // let cert_number = req.body.cert_number
-      // let id_card = req.body.id_card
-      // let photo_path = `images/${req.files.levelCert[0].filename}`
       let photo_path = `images/${req.files.photo[0].filename}`
-      // 改为解构式
       let {
-        // cert_number, id_card, photo_path 
         name, gender, project_grade, project, id_card, approval_enterprises, approval_date, cert_number
       } = req.body
-      // log(photo_path)
-      // log(req.files.levelCert[0].filename)
       // 检查参数
-      if ( // !cert_number || !id_card || !photo_path
+      if (
         !name ||
         // !gender ||
         [0, 1].includes(gender),
@@ -210,11 +201,9 @@ router.route('/levelCert')
               // } else {
               //   log('err', err)
               }
-
-
               // 更新该学生的数据
               userData.updateStudentLevelCertUrl(
-                // photo_path, user.id
+                // 其实已经检查了非空。
                 name !== undefined ? name : user.name,
                 gender !== undefined ? gender : user.gender,
                 project_grade !== undefined ? project_grade : user.project_grade,
@@ -232,20 +221,9 @@ router.route('/levelCert')
                   code: 0
                 })
               })
-
-                // res.status(200).json({
-                //   data: {},
-                //   message: '更新成功',
-                //   code: 0
-                // })
-
-
             })
           } else { // 保存该学生的数据
             return userData.insertStudents(
-              // id_card,
-              // photo_path,
-              // cert_number
               name, gender, project_grade, project, id_card, approval_enterprises, approval_date, cert_number, photo_path
             ).then(_ => {
               res.status(200).json({
