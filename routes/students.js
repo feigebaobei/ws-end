@@ -92,8 +92,22 @@ router.route('/levelCert')
     if (idCardOrCertNumber.length === 18) { // 按身份证号查
       userData.queryStudentByIdCard(idCardOrCertNumber).then(result => {
         console.log('result', result)
+        let data = {
+          approvalDate: result[0].approval_date,
+          approvalEnterprises: result[0].approval_enterprises,
+          certNumber: result[0].cert_number,
+          gender: result[0].gender,
+          // id: result[0].id,
+          idCard: result[0].id_card,
+          name: result[0].name,
+          photoPath: result[0].photo_path,
+          project: result[0].project,
+          projectGrade: result[0].project_grade
+        }
         res.status(200).json({
-          data: result[0].photo_path,
+          // data: result[0].photo_path,
+          // data: result[0],
+          data,
           message: '请求成功',
           code: 0
         })
@@ -107,8 +121,34 @@ router.route('/levelCert')
     } else { // 按证书号查
       userData.queryStudentByCertNumber(idCardOrCertNumber).then(result => {
         console.log('result', result)
+        // let data = {}
+        // result[0]
+        // approval_date: "2021-03-04T16:00:00.000Z"
+        // approval_enterprises: "中国武术协会"
+        // cert_number: 211213283
+        // gender: 1
+        // id: 27
+        // id_card: "110101199003077774"
+        // name: "张三"
+        // photo_path: "images/close165313054185459621.jpeg"
+        // project: "武术"
+        // project_grade: "段前一
+        let data = {
+          approvalDate: result[0].approval_date,
+          approvalEnterprises: result[0].approval_enterprises,
+          certNumber: result[0].cert_number,
+          gender: result[0].gender,
+          // id: result[0].id,
+          idCard: result[0].id_card,
+          name: result[0].name,
+          photoPath: result[0].photo_path,
+          project: result[0].project,
+          projectGrade: result[0].project_grade
+        }
         res.status(200).json({
-          data: result[0].photo_path,
+          // data: result[0].photo_path,
+          // data: result[0],
+          data,
           message: '请求成功',
           code: 0
         })
@@ -168,6 +208,7 @@ router.route('/levelCert')
       let {
         name, gender, project_grade, project, id_card, approval_enterprises, approval_date, cert_number
       } = req.body
+      // console.log(name, gender, project_grade, project, id_card, approval_enterprises, approval_date, cert_number)
       // 检查参数
       if (
         !name ||
@@ -189,7 +230,7 @@ router.route('/levelCert')
         // 是否已经存在该学生
         userData.queryStudentByIdCard(id_card).then(user => {
           // user: []
-          log('user', user, user[0].photo_path)
+          // log('user', user, user[0].photo_path)
           if (user.length) { // 更新该学生的数据
             user = user[0]
             // 删除原来的级位证书
@@ -234,7 +275,8 @@ router.route('/levelCert')
             })
           }
         }).catch(err => {
-          res.status(200).json({
+          // console.log('err', err)
+          res.status(500).json({
             data: err,
             message: '保存失败',
             code: 1
