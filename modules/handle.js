@@ -68,11 +68,11 @@ let userData = {
     //         })
     //     })
     // },
-    queryStudentByCertNumber: (certNumber) => {
+    queryStudentByCertNumber: (cert_number) => {
         return new Promise((s, j) => {
             pool.getConnection((err, connection) => {
                 if (!err) {
-                    connection.query(sql.queryStudentByCertNumber, certNumber, (err, result) => {
+                    connection.query(sql.queryStudentByCertNumber, cert_number, (err, result) => {
                         connection.release()
                         if (!err) {
                             s(result)
@@ -86,11 +86,11 @@ let userData = {
             })
         })
     },
-    queryStudentByIdCard: (idCard) => {
+    queryStudentByIdCard: (id_card) => {
         return new Promise((s, j) => {
             pool.getConnection((err, connection) => {
                 if (!err) {
-                    connection.query(sql.queryStudentByIdCard, idCard, (err, result) => {
+                    connection.query(sql.queryStudentByIdCard, id_card, (err, result) => {
                         // result: [{}]
                         connection.release()
                         if (!err) {
@@ -106,7 +106,7 @@ let userData = {
         })
     },
     // for test
-    insertTestUser: (username, passwordHash, role = 100, name = '', idCard = '') => {
+    insertTestUser: (username, passwordHash, role = 100, name = '', id_card = '') => {
         // connection.query(sql.insert, [param.id, param.name, param.age], function(err, result) {
         //     if (result) {
         //         result = 'add'
@@ -119,7 +119,7 @@ let userData = {
         return new Promise((s, j) => {
             pool.getConnection((err, connection) => {
                 if (!err) {
-                    // username, passwordHash, role, name, idCard
+                    // username, passwordHash, role, name, id_card
                     connection.query(sql.insertTestUser, [5000, 'name', 123, 'beijing'], (err, result) => {
                         log('insertUsers', err, result)
                         if (!err) {
@@ -139,11 +139,11 @@ let userData = {
             })
         })
     },
-    insertUsers: (username, passwordHash, role = 100, name, idCard) => {
+    insertUsers: (username, passwordHash, role = 100, name, id_card) => {
         return new Promise((s, j) => {
             pool.getConnection((err, connection) => {
                 if (!err) {
-                    connection.query(sql.insertUsers, [username, passwordHash, role, name, idCard], (err, result) => {
+                    connection.query(sql.insertUsers, [username, passwordHash, role, name, id_card], (err, result) => {
                         if (!err) {
                             s(result)
                         } else {
@@ -157,11 +157,17 @@ let userData = {
             })
         })
     },
-    insertStudents: (idCard, levelCertUrl, certNumber) => {
+    insertStudents: (
+        // id_card, photo_path, cert_number
+        name, gender, project_grade, project, id_card, approval_enterprises, approval_date, cert_number, photo_path
+        ) => {
         return new Promise((s, j) => {
             pool.getConnection((err, connection) => {
                 if (!err) {
-                    connection.query(sql.insertStudents, [idCard, levelCertUrl, certNumber], (err, result) => {
+                    connection.query(sql.insertStudents, [
+                        // id_card, photo_path, cert_number
+                        name, gender, project_grade, project, id_card, approval_enterprises, approval_date, cert_number, photo_path
+                    ], (err, result) => {
                         if (!err) {
                             s(result)
                         } else {
@@ -194,11 +200,11 @@ let userData = {
             })
         })
     },
-    updateStudentLevelCertUrl: (levelCertUrl, id) => {
+    updateStudentLevelCertUrl: (photo_path, id) => {
         return new Promise((s, j) => {
             pool.getConnection((err, connection) => {
                 if (!err) {
-                    connection.query(sql.updateStudentLevelCertUrl, [levelCertUrl, id], (err, result) => {
+                    connection.query(sql.updateStudentLevelCertUrl, [photo_path, id], (err, result) => {
                         connection.release()
                         if (!err) {
                             s(result)

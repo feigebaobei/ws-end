@@ -89,7 +89,7 @@ router.route('/levelCert')
 .get(cors.corsWithOptions, (req, res, next) => {
   let {idCardOrCertNumber} = req.query
   if (idCardOrCertNumber) {
-    if (idCardOrCertNumber.length === 18) {
+    if (idCardOrCertNumber.length === 18) { // 按身份证号查
       userData.queryStudentByIdCard(idCardOrCertNumber).then(result => {
         res.status(200).json({
           data: result[0].levelCertUrl,
@@ -103,14 +103,7 @@ router.route('/levelCert')
           code: 1
         })
       })
-    } else {
-      // userData.queryStudentByName(idCardOrCertNumber).then(result => {
-      //   res.status(200).json({
-      //     data: result,
-      //     message: '请求成功',
-      //     code: 0
-      //   })
-      // })
+    } else { // 按证书号查
       userData.queryStudentByCertNumber(idCardOrCertNumber).then(result => {
         res.status(200).json({
           data: result[0].levelCertUrl,
@@ -142,11 +135,21 @@ router.route('/levelCert')
     // 保存图片
     // let temp = 
     upload.fields([
-      {name: 'levelCert', maxCount: 1},
+      // {name: 'levelCert', maxCount: 1},
+      {name: 'photo', maxCount: 1},
     ]),
     // 保存图片路由到数据库
     (req, res, next) => {
-      // req.body.username
+      // req.body = {
+      //   name,
+      //   gender,
+      //   project_grade,
+      //   project,
+      //   id_card,
+      //   approval_enterprises,
+      //   approval_date,
+      //   cert_number,
+      // }
       // req.files: {levelCert: [
       //   {
       //     fieldname: '',
@@ -156,26 +159,41 @@ router.route('/levelCert')
       //     destination: 'public/images',
       //     filename: 'first164653587935731751.jpeg',
       //     path: 'public/images/first
-      //   }
+      //   },
+      // photo: [{...}]
       // ]}
-      // console.log(req.files)
 
-      // certNumber idCard levelCert
-      let certNumber = req.body.certNumber
-      let idCard = req.body.idCard
-      // let levelCertUrl = `${req.files.levelCert[0].destination}/${req.files.levelCert[0].filename}`
-      let levelCertUrl = `images/${req.files.levelCert[0].filename}`
-      log(levelCertUrl)
-      log(req.files.levelCert[0].filename)
-      // 是否已经存在该学生
-      if (!certNumber || !idCard || !levelCertUrl) {
+      // cert_number id_card levelCert
+      // let cert_number = req.body.cert_number
+      // let id_card = req.body.id_card
+      // let levelCertUrl = `images/${req.files.levelCert[0].filename}`
+      let photo_path = `images/${req.files.photo[0].filename}`
+      // 改为解构式
+      let {
+        // cert_number, id_card, levelCertUrl 
+        name, gender, project_grade, project, id_card, approval_enterprises, approval_date, cert_number
+      } = req.body
+      // log(levelCertUrl)
+      // log(req.files.levelCert[0].filename)
+      // 检查参数
+      if ( // !cert_number || !id_card || !levelCertUrl
+        !name ||
+        !gender ||
+        !project_grade ||
+        !project ||
+        !id_card ||
+        !approval_enterprises ||
+        !approval_date ||
+        !cert_number //, levelCertUr ||
+        ) {
         res.status(200).json({
           data: '',
-          message: '参数错误',
+          message: '上传数据错误',
           code: 1
         })
       } else {
-        userData.queryStudentByIdCard(idCard).then(user => {
+        // 是否已经存在该学生
+        userData.queryStudentByIdCard(id_card).then(user => {
           // user: []
           // log('user', user, user[0].levelCertUrl)
           if (user.length) { // 更新该学生的数据
@@ -199,7 +217,12 @@ router.route('/levelCert')
               })
             })
           } else { // 保存该学生的数据
-            return userData.insertStudents(idCard, levelCertUrl, certNumber).then(_ => {
+            return userData.insertStudents(
+              // id_card,
+              // levelCertUrl,
+              // cert_number
+              name, gender, project_grade, project, id_card, approval_enterprises, approval_date, cert_number, photo_path
+            ).then(_ => {
               res.status(200).json({
                 data: '',
                 message: '保存成功',
