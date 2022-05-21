@@ -91,8 +91,9 @@ router.route('/levelCert')
   if (idCardOrCertNumber) {
     if (idCardOrCertNumber.length === 18) { // 按身份证号查
       userData.queryStudentByIdCard(idCardOrCertNumber).then(result => {
+        console.log('result', result)
         res.status(200).json({
-          data: result[0].levelCertUrl,
+          data: result[0].photo_path,
           message: '请求成功',
           code: 0
         })
@@ -106,7 +107,7 @@ router.route('/levelCert')
     } else { // 按证书号查
       userData.queryStudentByCertNumber(idCardOrCertNumber).then(result => {
         res.status(200).json({
-          data: result[0].levelCertUrl,
+          data: result[0].photo_path,
           message: '请求成功',
           code: 0
         })
@@ -166,17 +167,17 @@ router.route('/levelCert')
       // cert_number id_card levelCert
       // let cert_number = req.body.cert_number
       // let id_card = req.body.id_card
-      // let levelCertUrl = `images/${req.files.levelCert[0].filename}`
+      // let photo_path = `images/${req.files.levelCert[0].filename}`
       let photo_path = `images/${req.files.photo[0].filename}`
       // 改为解构式
       let {
-        // cert_number, id_card, levelCertUrl 
+        // cert_number, id_card, photo_path 
         name, gender, project_grade, project, id_card, approval_enterprises, approval_date, cert_number
       } = req.body
-      // log(levelCertUrl)
+      // log(photo_path)
       // log(req.files.levelCert[0].filename)
       // 检查参数
-      if ( // !cert_number || !id_card || !levelCertUrl
+      if ( // !cert_number || !id_card || !photo_path
         !name ||
         !gender ||
         !project_grade ||
@@ -195,11 +196,11 @@ router.route('/levelCert')
         // 是否已经存在该学生
         userData.queryStudentByIdCard(id_card).then(user => {
           // user: []
-          // log('user', user, user[0].levelCertUrl)
+          // log('user', user, user[0].photo_path)
           if (user.length) { // 更新该学生的数据
             user = user[0]
             // 删除原来的级位证书
-            let levelCertPath = path.join(__dirname, '../', user.levelCertUrl)
+            let levelCertPath = path.join(__dirname, '../', user.photo_path)
             fs.stat(levelCertPath, (err, stat) => {
               if (!err) {
                 // 若无错误，则表示存在。然后执行删除
@@ -208,7 +209,7 @@ router.route('/levelCert')
               //   log('err', err)
               }
               // 更新该学生的数据
-              userData.updateStudentLevelCertUrl(levelCertUrl, user.id).then(result => {
+              userData.updateStudentLevelCertUrl(photo_path, user.id).then(result => {
                 res.status(200).json({
                   data: result,
                   message: '更新成功',
@@ -219,7 +220,7 @@ router.route('/levelCert')
           } else { // 保存该学生的数据
             return userData.insertStudents(
               // id_card,
-              // levelCertUrl,
+              // photo_path,
               // cert_number
               name, gender, project_grade, project, id_card, approval_enterprises, approval_date, cert_number, photo_path
             ).then(_ => {

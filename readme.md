@@ -128,3 +128,20 @@ express-jwt 用于将 JWT 字符串解析还原成 JSON 对象
 110101199003079016
 110101199003072850
 110101199003070695
+
+/students/levelCert
+post
+    name,
+    gender,
+    project_grade,
+    project,
+    id_card,
+    approval_enterprises,
+    approval_date,
+    cert_number,
+    photo
+
+/students/levelCert
+get
+    idCardOrCertNumber
+
